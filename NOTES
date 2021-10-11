@@ -1,0 +1,5 @@
+scc
+
+source language: scheme
+implementation language: c
+target platform: x64
