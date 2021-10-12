@@ -9,16 +9,9 @@
 
 #include <stdio.h>
 
-char const ident_chars[] =\
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP1234567890"\
-    "1234567890"\
-    "!$%&*+-./:<=>?@^_~";
-
-SSCState *ssc_state = 0x0;
-
-Expr *mk_expr(enum Type expr_type)
+Expr *mk_expr(int expr_type)
 {
-    Expr *new_expr = ssc_malloc(sizeof(new_expr));
+    Expr *new_expr = ssc_malloc(sizeof(*new_expr));
 
     new_expr->type = expr_type;
     switch (expr_type) {
@@ -36,8 +29,10 @@ Expr *mk_expr(enum Type expr_type)
     return new_expr;
 }
 
+// @Rant: i know this is supposed to be a compiler but i wanna
+// start with an repl...
 // @Note: maybe we just need Env in here?
-Expr *eval(SSCState *state, Expr *expr)
+void eval(SSCState *state, Expr *expr)
 {
     switch (expr->type) {
     case e_nil:
@@ -49,12 +44,11 @@ Expr *eval(SSCState *state, Expr *expr)
     case e_cons:
         break;
     };
-
-    return 0x0;
 }
 
 int main()
 {
-    ssc_assert(0);
-    ssc_malloc(20);
+    Error *err = mk_error(e_bad_arg, "foo", "an integer");
+
+    ssc_error(get_err_msg(*err));
 }

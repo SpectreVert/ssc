@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "util.h"
 #include "ssc.h"
@@ -50,7 +51,7 @@ void *ssc_malloc(size_t size)
 {
     void *ptr = calloc(size, 1);
 
-    if (ptr != 0x0) {
+    if (ptr == 0x0) {
         ssc_internal_error("memory full");       
     }
 
@@ -60,4 +61,16 @@ void *ssc_malloc(size_t size)
 void ssc_free(void *ptr)
 {
     free(ptr);
+}
+
+char *ssc_strdup(char const *s)
+{
+    size_t i, len = strlen(s);
+    char *dup = ssc_malloc(len + 1);
+
+    for (i = 0; *(s + i) != 0; ++i) {
+        *(dup + i) = *(s + i);
+    }
+
+    return dup;
 }

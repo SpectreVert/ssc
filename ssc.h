@@ -9,23 +9,22 @@
 #ifndef _SSC_H
 #define _SSC_H
 
-// @Todo move this downstairs in the file
+#include "err.h"
+
+// @Todo move this to another file (i.e: ssclib.h)
 typedef struct {
 	unsigned char verbose;
 } SSCState;
 
-extern SSCState *ssc_state;
+static SSCState *ssc_state = 0x0;
 
 /* ============================================================ */
 
-extern char const ident_chars[];
-
-enum Type {
-	e_nil,
-	e_integer,
-	e_symbol,
-	e_cons,
-};
+// @Note: maybe put this in the source code
+static char const ident_chars[] =\
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOP1234567890"\
+    "1234567890"\
+    "!$%&*+-./:<=>?@^_~";
 
 // @Note: list should be implemented as a list of cons
 // so don't try to be clever and make a O(1) complexity
@@ -38,24 +37,13 @@ typedef struct Sym {
 	// @Todo
 } Sym;
 
-// @Todo: (maybe) put this in another file so that we can have a lot
-// of error enums and messages without messing up ssc.h
-// @Rant: I don't really like the concept of exceptions so we'll make-do
-// with that Error type
-typedef struct Error {
-	enum {
-		e_default,  /* if you don't know better */
-		e_bad_expr, /* evaluating stuff that doesn't belong */
-		e_unk_var,  /* variable is not bound */
-		e_non_proc, /* attempting to apply non-procedure */
-		e_num_args, /* wrong number of arguments */
-		e_bad_arg,  /* bad argument type */
-	} type;
-	char *ctx; /* some additional context */
-} Error;
-
 typedef struct Expr {
-	enum Type type;
+	enum {
+		e_nil,
+		e_integer,
+		e_symbol,
+		e_cons,
+	} type;
 	union {
 		int  integer;
 		struct Sym   *sym;
@@ -71,7 +59,8 @@ typedef struct Env {
 
 /* ============================================================ */
 
-Expr *mk_expr(enum Type expr_type);
-Expr *eval(SSCState *state, Expr *expr);
+Expr *mk_expr(int expr_type);
+
+void eval(SSCState *state, Expr *expr);
 
 #endif /* _SSC_H */

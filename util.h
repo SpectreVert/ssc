@@ -22,7 +22,8 @@
 
 void  ssc_error0(char *const fmt, ...) PRINTF_LIKE(1, 2);
 void  ssc_error(char *const fmt, ...)  PRINTF_LIKE(1, 2);
-void* ssc_malloc(size_t size);
+void *ssc_malloc(size_t size);
 void  ssc_free(void *ptr);
+char *ssc_strdup(char const *s);
 
 #endif /* _UTIL_H */

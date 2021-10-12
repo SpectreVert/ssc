@@ -1,6 +1,6 @@
 include config.mk
 
-SRC = ssc.c util.c
+SRC = err.c  ssc.c util.c
 OBJ = ${SRC:.c=.o}
 
 all: options ssc
