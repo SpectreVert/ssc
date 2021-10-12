@@ -49,6 +49,7 @@ void eval(SSCState *state, Expr *expr)
 int main()
 {
     Error *err = mk_error(e_bad_arg, "foo", "an integer");
+    Error *err2 = mk_error(e_unk_var, "foo");
 
-    ssc_error(get_err_msg(*err));
+    ssc_error(get_err_msg(*err2));
 }

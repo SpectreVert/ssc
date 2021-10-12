@@ -19,14 +19,21 @@ char *err_msgs[] = {
 };
 
 // @Todo: make ctx argument variable argument
-Error *mk_error(int error_type, char const *obj, char const *ctx)
+Error *mk_error(int error_type, char const *obj, ...)
 {
+    va_list ap;
+    char const *ctx;
     Error *new_err = ssc_malloc(sizeof(*new_err));
 
     new_err->type = error_type;
     new_err->obj = ssc_strdup(obj);
-    if (ctx)
+    if (error_type == e_bad_arg) {
+        va_start(ap, obj);
+        ctx = va_arg(ap, char const *);
+        va_end(ap);
         new_err->ctx = ssc_strdup(ctx);
+    } else
+        new_err->ctx = 0x0; // should be 0s anyway
 
     return new_err;
 }

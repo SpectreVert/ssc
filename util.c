@@ -43,6 +43,7 @@ void ssc_error0(char *const fmt, ...)
 void ssc_error(char *const fmt, ...)
 {
     va_list ap;
+
     va_start(ap, fmt);
     _ssc_error_impl(ERROR_ERROR, fmt, ap);
 }

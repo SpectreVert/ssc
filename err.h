@@ -32,7 +32,7 @@ typedef struct Error {
 
 extern char *err_msgs[];
 
-Error *mk_error(int error_type, char const *obj, char const *ctx);
+Error *mk_error(int error_type, char const *obj, ...);
 char *get_err_msg(Error err);
 
 #endif /* _ERR_H */
