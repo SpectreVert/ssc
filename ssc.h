@@ -38,13 +38,30 @@ typedef struct Sym {
 	// @Todo
 } Sym;
 
+// @Todo: (maybe) put this in another file so that we can have a lot
+// of error enums and messages without messing up ssc.h
+// @Rant: I don't really like the concept of exceptions so we'll make-do
+// with that Error type
+typedef struct Error {
+	enum {
+		e_default,  /* if you don't know better */
+		e_bad_expr, /* evaluating stuff that doesn't belong */
+		e_unk_var,  /* variable is not bound */
+		e_non_proc, /* attempting to apply non-procedure */
+		e_num_args, /* wrong number of arguments */
+		e_bad_arg,  /* bad argument type */
+	} type;
+	char *ctx; /* some additional context */
+} Error;
+
 typedef struct Expr {
 	enum Type type;
 	union {
 		int  integer;
-		struct Sym  *sym;
-		struct Expr *cons;
-	} sexpr;
+		struct Sym   *sym;
+		struct Expr  *cons;
+		struct Error *err;
+	} s_expr;
 } Expr;
 
 typedef struct Env {
@@ -55,5 +72,6 @@ typedef struct Env {
 /* ============================================================ */
 
 Expr *mk_expr(enum Type expr_type);
+Expr *eval(SSCState *state, Expr *expr);
 
 #endif /* _SSC_H */

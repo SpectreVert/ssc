@@ -26,17 +26,35 @@ Expr *mk_expr(enum Type expr_type)
     case e_integer:
         break;
     case e_symbol:
-        new_expr->sexpr.sym = ssc_malloc(sizeof(Sym));
+        new_expr->s_expr.sym = ssc_malloc(sizeof(Sym));
         break;
     case e_cons:
-        new_expr->sexpr.cons = ssc_malloc(sizeof(Expr) * 2);
+        new_expr->s_expr.cons = ssc_malloc(sizeof(Expr) * 2);
         break;
     };
 
     return new_expr;
 }
 
+// @Note: maybe we just need Env in here?
+Expr *eval(SSCState *state, Expr *expr)
+{
+    switch (expr->type) {
+    case e_nil:
+        break;
+    case e_integer:
+        break;
+    case e_symbol:
+        break;
+    case e_cons:
+        break;
+    };
+
+    return 0x0;
+}
+
 int main()
 {
+    ssc_assert(0);
     ssc_malloc(20);
 }

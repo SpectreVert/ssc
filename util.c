@@ -22,6 +22,7 @@ void _ssc_error_impl(int type, char *const fmt, va_list vlist)
         fputs("ssc: ", stderr);
         vfprintf(stderr, fmt, vlist);
     }
+    // @Todo other cases
 
     fputs("\n", stderr);
     fflush(stderr);
@@ -35,7 +36,7 @@ void ssc_error0(char *const fmt, ...)
 
     ssc_state = 0x0;
     va_start(ap, fmt);
-    _ssc_error_impl(ERROR_ERROR, fmt, ap);
+    _ssc_error_impl(0x1337, fmt, ap);
 }
 
 void ssc_error(char *const fmt, ...)
