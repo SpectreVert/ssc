@@ -19,12 +19,13 @@ void _ssc_error_impl(int type, char *const fmt, va_list vlist)
     fflush(stdout);
 
     if (ssc_state == 0x0) {
-        fputs("tcc: ", stderr);
+        fputs("ssc: ", stderr);
         vfprintf(stderr, fmt, vlist);
     }
 
     fputs("\n", stderr);
     fflush(stderr);
+    exit(1);
 }
 
 // @Note: this function is used for outputting internal errors
@@ -53,4 +54,9 @@ void *ssc_malloc(size_t size)
     }
 
     return ptr;
+}
+
+void ssc_free(void *ptr)
+{
+    free(ptr);
 }

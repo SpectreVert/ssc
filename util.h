@@ -19,5 +19,6 @@
 void  ssc_error0(char *const fmt, ...) PRINTF_LIKE(1, 2);
 void  ssc_error(char *const fmt, ...)  PRINTF_LIKE(1, 2);
 void* ssc_malloc(size_t size);
+void  ssc_free(void *ptr);
 
 #endif /* _UTIL_H */

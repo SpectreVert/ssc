@@ -9,11 +9,10 @@
 #ifndef _SSC_H
 #define _SSC_H
 
-struct SSCState {
+// @Todo move this downstairs in the file
+typedef struct {
 	unsigned char verbose;
-};
-
-typedef struct SSCState SSCState;
+} SSCState;
 
 extern SSCState *ssc_state;
 
@@ -21,12 +20,10 @@ extern SSCState *ssc_state;
 
 extern char const ident_chars[];
 
-// @Todo: red-black tree or something for storing the symbols
-
 enum Type {
 	e_nil,
-	e_symbol,
 	e_integer,
+	e_symbol,
 	e_cons,
 };
 
@@ -37,22 +34,26 @@ enum Type {
 // @Note: symbol has to be implemented as a pointer- whatever that means
 // @Note2: symbols should be implemented using a hash table.
 
-struct Expr {
+typedef struct Sym {
+	// @Todo
+} Sym;
+
+typedef struct Expr {
 	enum Type type;
 	union {
-		int         integer;
+		int  integer;
 		struct Sym  *sym;
 		struct Expr *cons;
-	} expr;
-};
+	} sexpr;
+} Expr;
 
-struct Env {
+typedef struct Env {
 	// @Todo
 	struct Env *parent;
-};
+} Env;
 
 /* ============================================================ */
 
-struct Expr *mk_expr(enum Type);
+Expr *mk_expr(enum Type expr_type);
 
 #endif /* _SSC_H */
