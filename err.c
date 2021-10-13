@@ -12,13 +12,12 @@
 char *err_msgs[] = {
     [e_default]  = "<default error message>",
     [e_bad_expr] = "unrecognized expression %s",   /* don't really know */
-	[e_unk_var]  = "variable %s is not bound",              /* var name */
-	[e_non_proc] = "attempt to apply non-procedure %s",     /* proc name */
-	[e_num_args] = "incorrect argument count in call (%s)", /* proc name */
-	[e_bad_arg]  = "%s is not %s", /* object name, wanted type */
+    [e_unk_var]  = "variable %s is not bound",              /* var name */
+    [e_non_proc] = "attempt to apply non-procedure %s",     /* proc name */
+    [e_num_args] = "incorrect argument count in call (%s)", /* proc name */
+    [e_bad_arg]  = "%s is not %s", /* object name, wanted type */
 };
 
-// @Todo: make ctx argument variable argument
 Error *mk_error(int error_type, char const *obj, ...)
 {
     va_list ap;

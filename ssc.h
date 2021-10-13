@@ -10,6 +10,7 @@
 #define _SSC_H
 
 #include "err.h"
+#include "cons.h"
 
 // @Todo move this to another file (i.e: ssclib.h)
 typedef struct {
@@ -34,7 +35,8 @@ static char const ident_chars[] =\
 // @Note2: symbols should be implemented using a hash table.
 
 typedef struct Sym {
-	// @Todo
+	char const *name;
+	// @Todo move this to another file
 } Sym;
 
 typedef struct Expr {
@@ -43,11 +45,12 @@ typedef struct Expr {
 		e_integer,
 		e_symbol,
 		e_cons,
+		e_error,
 	} type;
 	union {
-		int  integer;
+		int       integer;
 		struct Sym   *sym;
-		struct Expr  *cons;
+		struct Cons  *cons;
 		struct Error *err;
 	} s_expr;
 } Expr;
@@ -59,8 +62,10 @@ typedef struct Env {
 
 /* ============================================================ */
 
-Expr *mk_expr(int expr_type);
+Expr *mk_expr(int expr_type, int prealloc);
 
-void eval(SSCState *state, Expr *expr);
+void  generate(SSCState *state, Expr *expr);
+Expr *eval(SSCState *state, Expr *expr);
+void  display(Expr *expr, char nested);
 
 #endif /* _SSC_H */
