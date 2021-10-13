@@ -62,7 +62,7 @@ typedef struct Env {
 
 /* ============================================================ */
 
-Expr *mk_expr(int expr_type, int prealloc);
+Expr *mk_expr(int expr_type, ...);
 
 void  generate(SSCState *state, Expr *expr);
 Expr *eval(SSCState *state, Expr *expr);

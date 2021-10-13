@@ -9,29 +9,37 @@
 
 #include <stdio.h>
 
-Expr *mk_expr(int expr_type, int prealloc)
+// @Todo: a mk_expr_hollow() or something that doesn't take the
+// objects to fill up the structure.
+Expr *mk_expr(int expr_type, ...)
 {
     Expr *new_expr = ssc_malloc(sizeof(*new_expr));
+    va_list al;
 
     new_expr->type = expr_type;
-
-    if (!prealloc)
-        return new_expr;
+    va_start(al, expr_type);
 
     switch (expr_type) {
     case e_nil:
     case e_integer:
+        new_expr->s_expr.integer = va_arg(al, int);
         break;
     case e_symbol:
         new_expr->s_expr.sym = ssc_malloc(sizeof(Sym));
+        assert(0 || "haven't implemented symbols yet");
         break;
     case e_cons:
-        new_expr->s_expr.cons = ssc_malloc(sizeof(Expr) * 2);
+        new_expr->s_expr.cons = ssc_malloc(sizeof(Cons));
+        new_expr->s_expr.cons->car = va_arg(al, Expr *);
+        new_expr->s_expr.cons->cdr = va_arg(al, Expr *);
         break;
     case e_error:
         new_expr->s_expr.err  = ssc_malloc(sizeof(Error));
+        new_expr->s_expr.err = va_arg(al, Error *);
         break;
     };
+    
+    va_end(al);
 
     return new_expr;
 }
@@ -110,21 +118,13 @@ void display(Expr *expr, char nested)
 
 int main()
 {
-    Expr *expr1 = mk_expr(e_cons, 0);
-    Expr *expr11 = mk_expr(e_cons, 0);
-    Expr *expr111 = mk_expr(e_integer, 0);
-    Expr *expr112 = mk_expr(e_integer, 0);
-    Expr *expr12 = mk_expr(e_cons, 0);
-    Expr *expr121 = mk_expr(e_integer, 1);
-    Expr *expr122 = mk_expr(e_integer, 0);
+    Expr *newmode = mk_expr(e_cons,
+        mk_expr(e_cons,
+            mk_expr(e_integer, 111),
+            mk_expr(e_integer, 112)),
+        mk_expr(e_cons,
+            mk_expr(e_integer, 121),
+            mk_expr(e_integer, 122)));
 
-    expr111->s_expr.integer = 111;
-    expr112->s_expr.integer = 112;
-    expr11->s_expr.cons = mk_cons(expr111, expr112);
-    expr121->s_expr.integer = 121;
-    expr122->s_expr.integer = 122;
-    expr12->s_expr.cons = mk_cons(expr121, expr122);
-    expr1->s_expr.cons = mk_cons(expr11, expr12);
-
-    display(expr1, 0);
+    display(newmode, 0);
 }
