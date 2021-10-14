@@ -11,6 +11,7 @@
 
 #include "err.h"
 #include "cons.h"
+#include "node.h"
 
 // @Todo move this to another file (i.e: ssclib.h)
 typedef struct {
@@ -45,12 +46,14 @@ typedef struct Expr {
 		e_integer,
 		e_symbol,
 		e_cons,
+		e_node,
 		e_error,
 	} type;
 	union {
 		int       integer;
 		struct Sym   *sym;
 		struct Cons  *cons;
+		struct Node  *node;
 		struct Error *err;
 	} s_expr;
 } Expr;
@@ -64,8 +67,9 @@ typedef struct Env {
 
 Expr *mk_expr(int expr_type, ...);
 
-void  generate(SSCState *state, Expr *expr);
 Expr *eval(SSCState *state, Expr *expr);
-void  display(Expr *expr, char nested);
+
+void  display(Expr *expr);
+void  display_nested(Expr *expr, char nested);
 
 #endif /* _SSC_H */

@@ -10,9 +10,15 @@
 #define _UTIL_H
 
 #include <assert.h>
+#include <stdarg.h>
 #include <stddef.h>
 
 #define PRINTF_LIKE(x, y) __attribute__ ((format (printf, (x), (y))))
+
+#define VA_ARG_START(name, last_arg) va_list name; va_start(name, last_arg)
+#define VA_ARG(name, type)           va_arg(name, type)
+#define VA_ARG_END(name)             va_end(name)
+#define VA_ARG_COPY(src, dest)       va_copy(dest, src)
 
 // for now is a copy of assert but can be changed in the future for debug
 #define ssc_assert(x) assert(x)

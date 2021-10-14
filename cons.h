@@ -11,6 +11,7 @@
 
 struct Expr;
 
+// @Todo: rename all of this to Pair
 typedef struct Cons {
 	struct Expr *car;
 	struct Expr *cdr;
