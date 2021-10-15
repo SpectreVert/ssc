@@ -1,6 +1,6 @@
 include config.mk
 
-SRC = cons.c err.c node.c ssc.c util.c
+SRC = err.c pair.c ssc.c util.c
 OBJ = ${SRC:.c=.o}
 
 all: options ssc

@@ -10,8 +10,7 @@
 #define _SSC_H
 
 #include "err.h"
-#include "cons.h"
-#include "node.h"
+#include "pair.h"
 
 // @Todo move this to another file (i.e: ssclib.h)
 typedef struct {
@@ -28,7 +27,7 @@ static char const ident_chars[] =\
     "1234567890"\
     "!$%&*+-./:<=>?@^_~";
 
-// @Note: list should be implemented as a list of cons
+// @Note: list should be implemented as a list of pair
 // so don't try to be clever and make a O(1) complexity
 // list type. For this will implement vector
 
@@ -45,15 +44,13 @@ typedef struct Expr {
 		e_nil,
 		e_integer,
 		e_symbol,
-		e_cons,
-		e_node,
+		e_pair,
 		e_error,
 	} type;
 	union {
 		int       integer;
 		struct Sym   *sym;
-		struct Cons  *cons;
-		struct Node  *node;
+		struct Pair  *pair;
 		struct Error *err;
 	} s_expr;
 } Expr;

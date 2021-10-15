@@ -6,20 +6,24 @@
  * see LICENSE
 */
 
-#ifndef _CONS_H
-#define _CONS_H
+#ifndef _PAIR_H
+#define _PAIR_H
+
+#include <stdarg.h>
+#include <stddef.h>
 
 struct Expr;
 
 // @Todo: rename all of this to Pair
-typedef struct Cons {
+typedef struct Pair {
 	struct Expr *car;
 	struct Expr *cdr;
-} Cons;
+} Pair;
 
-Cons *mk_cons(struct Expr *car, struct Expr *cdr);
-struct Expr *car(Cons *cons);
-struct Expr *cdr(Cons *cons);
+Pair *mk_pair(size_t size, ...);
+Pair *mk_pair_va_list(size_t size, va_list al);
+struct Expr *car(Pair *pair);
+struct Expr *cdr(Pair *pair);
 char is_list(struct Expr *expr);
 char is_fake_list(struct Expr *expr);
 

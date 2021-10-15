@@ -1,4 +1,4 @@
-/*
+/* 
  * Created by Costa Bushnaq
  *
  * 11-10-2021 @ 20:58:35
@@ -11,6 +11,8 @@
 
 // @Todo: a mk_expr_hollow() or something that doesn't take the
 // objects to fill up the structure.
+// OR
+// make a flag to OR into expr_type to tell not to allocate
 Expr *mk_expr(int expr_type, ...)
 {
     Expr *new_expr = ssc_malloc(sizeof(*new_expr));
@@ -20,6 +22,7 @@ Expr *mk_expr(int expr_type, ...)
 
     switch (expr_type) {
     case e_nil:
+        break;
     case e_integer:
         new_expr->s_expr.integer = VA_ARG(al, int);
         break;
@@ -27,19 +30,13 @@ Expr *mk_expr(int expr_type, ...)
         new_expr->s_expr.sym = ssc_malloc(sizeof(Sym));
         assert(0 || "haven't implemented symbols yet");
         break;
-    case e_cons: {
-        // we can't do va_arg in place of arguments
-        Expr *tmp_expr  = VA_ARG(al, Expr *);
-        Expr *tmp_expr1 = VA_ARG(al, Expr *);
-        new_expr->s_expr.cons = mk_cons(tmp_expr, tmp_expr1);
-        } break;
-    case e_node: {
+    case e_pair: {
         size_t tmp_size = VA_ARG(al, size_t);
         va_list tmp_al;
         VA_ARG_COPY(al, tmp_al);
-        new_expr->s_expr.node = mk_node_va_list(tmp_size, tmp_al);
+        new_expr->s_expr.pair = mk_pair_va_list(tmp_size, tmp_al);
         VA_ARG_END(tmp_al);
-    } break;
+        } break;
     case e_error:
         new_expr->s_expr.err = va_arg(al, Error *);
         break;
@@ -70,11 +67,9 @@ Expr *eval(SSCState *state, Expr *expr)
         break;
     case e_symbol:
         break;
-    case e_cons:
+    case e_pair:
+        ssc_error("cons evaluation not done yet");
         ret_expr = expr;
-        break;
-    case e_node:
-        ssc_error("node evaluation not implemented yet");
         break;
     case e_error:
         ret_expr = expr;
@@ -107,33 +102,32 @@ void display_nested(Expr *expr, char nested)
     case e_symbol:
         printf("%s", expr->s_expr.sym->name);
         break;
-    case e_cons:
+    case e_pair:
         if (is_fake_list(expr)) { /* we're somekind of a list */
             if (!nested)
                 printf("(");
-            display(expr->s_expr.cons->car);
+            display(expr->s_expr.pair->car);
             printf(" ");
-            display_nested(expr->s_expr.cons->cdr, 1);
+            display_nested(expr->s_expr.pair->cdr, 1);
             if (!nested)
                 printf(")");
         } else { /* we're just a plain, old pair */
             if (!nested)
                 printf("(");
-            display(expr->s_expr.cons->car);
-            printf(" . ");
-            display_nested(expr->s_expr.cons->cdr, 1);
+            display(expr->s_expr.pair->car);
+            // @Bug: from the scheme reference, should only print dot
+            // if the next thing is not a '('
+            // so basically if it isn't a pair or nil
+            if (expr->s_expr.pair->cdr->type != e_pair &&
+                expr->s_expr.pair->cdr->type != e_nil) {
+                printf(" . ");
+            } else {
+                printf(" ");
+            }
+            display_nested(expr->s_expr.pair->cdr, 1);
             if (!nested)
                 printf(")");
         } break;
-    case e_node:
-        printf("(");
-        for (size_t i = 0; i < expr->s_expr.node->size; ++i) {
-            display(expr->s_expr.node->leaves[i]);
-            if (i < expr->s_expr.node->size - 1)
-                printf(" ");
-        }
-        printf(")");
-        break;
     case e_error:
         printf("%s", get_err_msg(*expr->s_expr.err));
         break;
@@ -142,20 +136,20 @@ void display_nested(Expr *expr, char nested)
 
 int main()
 {
-    Expr *cons = mk_expr(e_cons,
+    Expr *cons = mk_expr(e_pair, 2,
         mk_expr(e_integer, 111),
         mk_expr(e_integer, 112));
-    Expr *cons1 = mk_expr(e_cons,
+    Expr *cons1 = mk_expr(e_pair, 2,
         mk_expr(e_integer, 121),
         mk_expr(e_integer, 122));
 
-    Expr *cons_of_cons = mk_expr(e_cons, mk_expr(e_integer, 113), cons1);
-    Expr *list_of_cons = mk_expr(e_node, 2, cons, cons1);
+    Expr *pair_of_pair = mk_expr(e_pair, 2, mk_expr(e_integer, 113), cons1);
+    Expr *list_of_pair = mk_expr(e_pair, 2, cons, cons1);
 
-    printf("cons of cons: ");
-    display(cons_of_cons);
+    printf("pair of pair: ");
+    display(pair_of_pair);
     puts("");
-    printf("list of cons: ");
-    display(list_of_cons);
+    printf("list of pair: ");
+    display(list_of_pair);
     puts("");
 }
